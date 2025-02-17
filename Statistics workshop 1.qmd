@@ -1,0 +1,1105 @@
+---
+title: "Statistics workshop 1"
+format: 
+  html:
+    code-overflow: wrap
+    df-print: kable
+knitr:
+  opts_chunk:
+    collapse: false
+theme: cerulean
+editor: visual
+code-annotations: select
+---
+
+```{r}
+#| label: kable
+#| echo: false
+#| eval: true
+library(knitr)
+```
+
+## Testing for Differences for One or Two Groups
+
+This workshop introduces you to analysing whether or not <br> (1) the mean of one group or sample of data differs significantly (statistically) from an expected mean value, and <br> (2) the means of two groups are statistically significantly different. The data in the two groups could be (a) independent - for example, a group treated with a drug and a control group) or (b) paired - where each person or subject is tested before and after a treatment.
+
+First, load the packages that you will be using:
+
+::: {.callout-important appearance="simple" collapse="true" title="Click to see packages to install (Copy and paste to Script editor)" icon="true"}
+```{r packages, echo = TRUE, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(rio)
+library(psych)
+library(pastecs)
+library(FSA)
+library(effsize)
+library(rstatix)
+library(pwr)
+```
+:::
+
+<br>**SELECT THE RELEVANT TAB BELOW FOR YOUR DATA**
+
+:::::::::::::::::::::: panel-tabset
+### **1-SAMPLE TESTS**
+
+This example is to analyse whether or not the mean value of cholesterol measured in a sample of 20 people is statistically significantly different to an expected value of 120.
+
+<br> **1. Download the Excel file `1-sample cholesterol.xlsx` from Canvas.**
+
+::: {.callout-note collapse="true" title="Click guidance notes" icon="true"}
+-   Check that the data in the file is 'tidy'
+-   Save it to a folder that you will use as your working directory on your OneDrive - Kingston University account.
+-   In RStudio, locate the file and set the location as your working directory. <br> If you are using a University computer you can locate OneDrive by typing: `setwd("O:/")`.<br><br> Then click the 'More' cog icon and select 'Go to working directory' and find your folder - set that as your final working directory.
+:::
+
+<br> **2. Import the file to RStudio and store it as a dataframe called *chol_1Sample*.**<br> The `head()` function shows us the first 6 rows.<br>
+
+```{r}
+#| label: import
+#| echo: TRUE
+#| eval: false
+chol_1Sample <- import('1-sample cholesterol.xlsx') #<1>
+head(chol_1Sample) #<2>
+```
+
+1.  Imports the excel file to a dataframe object callsed 'chol_1Sample'
+2.  Shows the first 6 rows of the dataframe
+
+::: {.callout-note collapse="true" title="Click to see the first 6 rows of the dataframe" icon="false"}
+```{r}
+#| label: import1
+#| echo: false
+#| eval: true
+chol_1Sample <- import('1-sample cholesterol.xlsx')
+head(chol_1Sample) |>
+  kable(align = 'l')
+```
+:::
+
+As you can see, the dataframe contains one column (variable) that is called 'LDL'.
+
+<br> The `summarise_all(class)` function shows us what type of data is stored in the dataframe:
+
+```{r}
+#| label: summ_chol1
+#| echo: TRUE
+#| eval: false
+chol_1Sample |>
+  summarise_all(class)
+```
+
+::: {.callout-note collapse="true" title="Click to see the variable data types" icon="false"}
+```{r}
+#| label: summ_chol1a
+#| echo: false
+#| eval: true
+chol_1Sample |>
+  summarise_all(class)
+```
+:::
+
+<br> Save it as an RData file so that you do not have to import the xlsx file again if you want to use this data another time:
+
+```{r}
+#| label: chol_1Sample RData
+#| echo: TRUE
+save(chol_1Sample, file = "chol_1Sample.RData")
+```
+
+<br><br> **3. Explore the data with a boxplot and obtain descriptive statistics:**<br> `3.1` Produce a boxplot to view the data. <br>The 1st line calculates the mean of the LDL column and stores it as an object called mean_chol to use in the boxplot.
+
+```{r}
+#| label: box1 
+#| echo: TRUE
+#| eval: false
+mean_chol <- mean(chol_1Sample$LDL)    #<1>
+chol_1Sample |>
+  ggplot() +
+  geom_boxplot(aes(y = LDL)) +     #<2>
+  geom_hline(yintercept = mean_chol, colour = "black", linetype = "dashed") +  #<3>
+  scale_x_discrete() +
+  labs(title = "Boxplot of Cholesterol 1-Sample Data",
+       subtitle = "Dashed line = mean",
+       y = "LDL (mg/dL)")
+```
+
+1.  Calculates the mean LDL value and stores it in an object called `mean_chol`
+2.  Sends the chol_1Sample dataframe to ggplot() to create a boxplot with LDL on the y-axis
+3.  Creates a horizontal dashed line as the mean value
+
+::: {.callout-note collapse="true" title="Click to see the boxplot" icon="false"}
+```{r}
+#| label: box1a
+#| echo: false
+#| eval: true
+mean_chol <- mean(chol_1Sample$LDL)
+chol_1Sample |>
+  ggplot() +
+  geom_boxplot(aes(y = LDL)) +
+  geom_hline(yintercept = mean_chol, colour = "black", linetype = "dashed") +
+  scale_x_discrete() +
+  labs(title = "Boxplot of Cholesterol 1-Sample Data",
+       subtitle = "Dashed line = mean",
+       y = "LDL (mg/dL)")
+```
+:::
+
+<br><br>`3.2` Descriptive statistics plus Shapiro Wilk test for normality:
+
+```{r}
+#| label: descriptive
+#| echo: TRUE
+#| eval: false
+chol_1Sample |>
+  stat.desc(norm = TRUE) 
+```
+
+::: {.callout-note collapse="true" title="Click to see the summary statistics" icon="false"}
+```{r}
+#| label: descriptive1
+#| echo: false
+#| eval: true
+chol_1Sample |>
+  stat.desc(norm = TRUE) 
+```
+
+The *normtest.p* is the P-value for the Shapiro-Wilk test for a normal distribution. In this case, P\<0.05 so the data is NOT normally distributed.
+:::
+
+<br><br>
+
+##### **Question: Is the mean value of the sample statistically significantly different to an expected value of 120?**
+
+<br>
+
+###### **4. ANALYSIS: IF THE DATA IS NORMALLY DISTRIBUTED**
+
+<br>`4.1` **1-sample t-test**:<br> To test of the mean of the LDL variable is statistically different or not to an expected value of 120:
+
+```{r}
+#| label: distr_chol1
+#| echo: TRUE
+#| eval: false
+chol_1Sample |>
+  t_test(LDL ~ 1, mu = 120)  #<1>
+```
+
+1.  T-test for 1 variable and compares the mean LDL against an expected value of 120
+
+::: {.callout-note collapse="true" title="Click to see the result of the t-test" icon="false"}
+```{r}
+#| label: distr_chol1a
+#| echo: false
+#| eval: true
+chol_1Sample |>
+  t_test(LDL ~ 1, mu = 120) |>
+  kable(align = 'l')
+```
+
+Here, P=0.414, so the data IS NOT statistically significantly different to an expected value of 120.
+:::
+
+<br>`4.2` **Effect size (Cohen's d)**:
+
+```{r}
+#| label: effsize_chol1
+#| echo: TRUE
+#| eval: false
+chol_1Sample |>
+  cohens_d(LDL ~ 1, mu = 120, hedges.correction = FALSE)  #<1> 
+```
+
+1.  Cohen's d effect size of LDL mean versus expected value of 120
+
+::: {.callout-note collapse="true" title="Click to see the result of Cohen's d effect size" icon="false"}
+```{r}
+#| label: effsize_chol1a
+#| echo: false
+#| eval: true
+chol_1Sample |>
+  cohens_d(LDL ~ 1, mu = 120, hedges.correction = FALSE) |>
+  kable(align = 'l') 
+```
+
+As shown in the output, the effect size is 'negligible'<br> See lecture notes: <br> d: 0.20 = small; 0.50 = medium; 0.80 = large
+:::
+
+<br>`4.3` **Power analysis** (d is Cohen's d value for effect size):
+
+```{r}
+#| label: pwr_chol1
+#| echo: TRUE
+#| eval: false
+pwr.t.test(n = 20, d = 0.187, sig.level = 0.05, power = NULL, type = c("one.sample"))  #<1>
+```
+
+1.  n = number of values, d = Cohen's d. Leave power = NULL as this is the one value we don't know and want to find out.
+
+::: {.callout-note collapse="true" title="Click to see the result of power analysis" icon="false"}
+```{r}
+#| label: pwr_chol1a
+#| echo: false
+#| eval: true
+pwr.t.test(n = 20, d = 0.187, sig.level = 0.05, power = NULL, type = c("one.sample"))
+```
+
+Power = 0.125. So, there was only a 12.5% chance of detecting an effect if there was one. We could be making a Type II error.
+:::
+
+<br> <br>
+
+###### **5. ANALYSIS: IF THE DATA IS NOT NORMALLY DISTRIBUTED**
+
+<br>`5.1` **Wilcoxon 1-sample test**:
+
+```{r}
+#| label: 1-sample_not_norm
+#| echo: TRUE
+#| eval: false
+chol_1Sample |>
+  wilcox_test(LDL ~ 1, mu = 120)  #<1>
+```
+
+1.  Wilcoxon test for 1 variable, comparing the mean LDL against an expected value of 120
+
+::: {.callout-note collapse="true" title="Click to see the result of Wilcoxon test" icon="false"}
+```{r}
+#| label: 1-sample_not_norm1
+#| echo: false
+#| eval: true
+chol_1Sample |>
+  wilcox_test(LDL ~ 1, mu = 120) |>
+  kable(align = 'l')
+```
+
+Here, P=0.322, so the data IS NOT statistically significantly different to an expected value of 120.
+:::
+
+<br>`5.2` **Effect size (Wilcoxon effect size)**:
+
+```{r}
+#| label: Weffsize_chol1
+#| echo: TRUE
+#| eval: false
+chol_1Sample |>
+  wilcox_effsize(LDL ~ 1, mu = 120)  #<1>
+```
+
+1.  Effect size comparing the mean LDL against an expected value of 120
+
+::: {.callout-note collapse="true" title="Click to see the result of Wilcoxon effect size" icon="false"}
+```{r}
+#| label: Weffsize_chol1a
+#| echo: false
+#| eval: true
+chol_1Sample |>
+  wilcox_effsize(LDL ~ 1, mu = 120) |>
+  kable(align = 'l')
+```
+
+The effect size of 0.225 is small.
+:::
+
+<br>`5.3` **Power analysis** (d is Wilcoxon effect size):
+
+```{r}
+#| label: Wpwr_chol1
+#| echo: TRUE
+#| eval: false
+pwr.t.test(n = 20, d = 0.225, sig.level = 0.05, power = NULL, type = c("one.sample")) #<1>
+```
+
+1.  n = number of values, d = Wilcoxon effect size. Leave power = NULL as this is the one value that we don't know and want to find out.
+
+::: {.callout-note collapse="true" title="Click to see the result of power analysis" icon="false"}
+```{r}
+#| label: Wpwr_chol1a
+#| echo: false
+#| eval: true
+pwr.t.test(n = 20, d = 0.225, sig.level = 0.05, power = NULL, type = c("one.sample"))
+```
+
+The power of the test is only 15.9% to detect an effect. There is a chance we could be making a Type II error.
+:::
+
+### **TWO INDEPENDENT SAMPLES**
+
+This example is to analyse whether or not the mean cholesterol levels in two independent groups of people are statistically significantly different. Group 1 is the experimental group given a new drug to reduce cholesterol. Group 2 is a control group given a placebo.
+
+<br> **1. Download the Excel file `2-sample cholesterol.xlsx`**
+
+::: {.callout-note collapse="true" title="Click guidance notes" icon="true"}
+-   Check that the data in the file is 'tidy'
+-   Save it to a folder that you will use as your working directory on your OneDrive - Kingston University account.
+-   In RStudio, locate the file and set the location as your working directory. <br> If you are using a University computer you can locate OneDrive by typing: `setwd("O:/")`.<br><br> Then click the 'More' cog icon and select 'Go to working directory' and find your folder - set that as your final working directory.
+:::
+
+<br> **2. Import the file to RStudio and store it as a dataframe called *chol_2_ind_sample*.** <br> The `head()` function shows us the first 6 rows.
+
+```{r}
+#| label: import_2_sample
+#| echo: TRUE
+#| eval: false
+chol_2_ind_sample <- import('2-sample cholesterol.xlsx')  #<1>
+head(chol_2_ind_sample)  #<2>
+```
+
+1.  Imports the excel file and stores it as a dataframe called 'chol_2_ind_sample'
+2.  The `head()` function shows us the first 6 rows
+
+::: {.callout-note collapse="true" title="Click to see the 1st 6 rows" icon="false"}
+```{r}
+#| label: import_2_samplea
+#| echo: false
+#| eval: true
+chol_2_ind_sample <- import('2-sample cholesterol.xlsx')
+head(chol_2_ind_sample)|>
+  kable(align = 'l')
+```
+
+**Note** that the data is 'tidy' - each column is a unique variable & each row is for 1 person
+:::
+
+The `summarise_all(class)` function shows us what type of data is stored in the dataframe.
+
+```{r}
+#| label: sum_2_sample
+#| echo: TRUE
+#| eval: false
+chol_2_ind_sample |>
+summarise_all(class) 
+```
+
+::: {.callout-note collapse="true" title="Click to see the data types" icon="false"}
+```{r}
+#| label: sum_2_samplea
+#| echo: false
+#| eval: true
+chol_2_ind_sample |>
+summarise_all(class) |>
+  kable(align = 'l')
+```
+
+Both variables are numeric
+:::
+
+<br> You will see that both variables are numeric. However, Group is a variable consisting of categories (Group 1 and Group 2), and it should be a factor. <br>Make the Group variable a factor, and check it with `summarise_all(class)` again:
+
+```{r}
+#| label: factor_ind_sample
+#| echo: TRUE
+#| eval: false
+chol_2_ind_sample <- chol_2_ind_sample |>
+  mutate(Group = as.factor(Group))  #<1>
+
+chol_2_ind_sample |>
+  summarise_all(class)  #<2> 
+```
+
+1.  Sends the *chol_2_ind_sample* dataframe to the mutate() function to convert Group to become a factor. Saves this as an object with the same dataframe name (*ie*, it overwrites the dataframe)
+2.  Check the types of data in each variable
+
+::: {.callout-note collapse="true" title="Click to see the data types" icon="false"}
+```{r}
+#| label: factor_ind_sample1
+#| echo: false
+#| eval: true
+chol_2_ind_sample <- chol_2_ind_sample |>
+  mutate(Group = as.factor(Group))
+
+chol_2_ind_sample |>
+  summarise_all(class) |> 
+  kable(align = 'l')
+```
+:::
+
+<br> <br> **3. Explore the data with a boxplot:**
+
+Boxplot to view the data:
+
+```{r}
+#| label: ind_sample_boxplot
+#| echo: TRUE
+#| warning: FALSE
+#| eval: false
+chol_2_ind_sample |>
+  ggplot(aes(x = Group, y = Cholesterol)) +   
+  geom_boxplot(fill = "lightblue") +  #<1>
+  stat_summary(fun=mean, geom="point", shape=15, size = 4, color="black", fill="black") +   #<2>
+  labs(title = "Boxplot of Cholesterol 2-Sample Data",
+       subtitle = "(square = mean, thick line = median)",
+       x = "Group",
+       y = "Cholesterol (mg/dL)")  #<3>
+```
+
+1.  Sends the dataframe to the ggplot() function to create a boxplot with Group on the x axis and Cholesterol on the y-axis
+2.  Adds the mean value as a black square
+3.  Type suitable title and axis labels in inverted commas
+
+::: {.callout-note collapse="true" title="Click to see the boxplot" icon="false"}
+```{r}
+#| label: ind_sample_boxplot1
+#| echo: false
+#| warning: FALSE
+#| eval: true
+chol_2_ind_sample |>
+  ggplot(aes(x = Group, y = Cholesterol)) +
+  geom_boxplot(fill = "lightblue") +
+  stat_summary(fun=mean, geom="point", shape=15, size = 4, color="black", fill="black") +
+  labs(title = "Boxplot of Cholesterol 2-Sample Data",
+       subtitle = "(square = mean, thick line = median)",
+       x = "Group",
+       y = "Cholesterol (mg/dL)")
+```
+:::
+
+<br><br> **4. Descriptive statistics (using psych package), Shapiro Wilk test for normality & Levene's test for homogeneity of variance (from rstatix package)** <br><br> `4a.` **Descriptives**
+
+```{r}
+#| label: descriptives
+#| echo: TRUE
+#| eval: false
+Summarize(Cholesterol ~ Group, data = chol_2_ind_sample) 
+```
+
+::: {.callout-note collapse="true" title="Click to see the summary statistics" icon="false"}
+```{r}
+#| label: descriptives1
+#| echo: false
+#| eval: true
+Summarize(Cholesterol ~ Group, data = chol_2_ind_sample) |>
+  kable(align = 'l')
+```
+:::
+
+<br>`4b.` **Shapiro wilk test** <br>(P\>0.05: the data is normally distributed)
+
+```{r}
+#| label: shap_ind
+#| echo: TRUE
+#| eval: false
+chol_2_ind_sample |>
+  group_by(Group) |>    #<1>
+  shapiro_test(Cholesterol) 
+```
+
+1.  Cholesterol variable data grouped by the Group variable
+
+::: {.callout-note collapse="true" title="Click to see the result of the Shapiro Wilk test" icon="false"}
+```{r}
+#| label: shap_ind1
+#| echo: false
+#| eval: true
+chol_2_ind_sample |>
+  group_by(Group) |>
+  shapiro_test(Cholesterol) |>
+  kable(align = 'l')
+```
+
+In this example, P\>0.05 for both groups, so the data in both groups ARE normally distributed.
+:::
+
+<br>`4c.` **Homogeneity of variance test**<br> (P\>0.05: the variances of the 2 groups are equal)
+
+```{r}
+#| label: levene_ind
+#| echo: TRUE
+#| eval: false
+chol_2_ind_sample |>
+  levene_test(Cholesterol ~ Group) 
+```
+
+::: {.callout-note collapse="true" title="Click to see the result of the Shapiro Wilk test" icon="false"}
+```{r}
+#| label: levene_ind1
+#| echo: false
+#| eval: true
+chol_2_ind_sample |>
+  levene_test(Cholesterol ~ Group) |>
+  kable(align = 'l')
+```
+
+In this example, P\>0.05, so the variances ARE equal.
+:::
+
+<br> <br>
+
+###### **5. IF DATA IS NORMALLY DISTRIBUTED & VARIANCES ARE EQUAL**
+
+<br> `5a.` **T-Test**
+
+```{r}
+#| label: t-test_ind
+#| echo: TRUE
+#| eval: false
+t_test_chol <- chol_2_ind_sample |>
+  t_test(Cholesterol ~ Group, paired = FALSE, var.equal = TRUE) |>  #<1>
+  add_significance()  #<2>
+t_test_chol
+```
+1. Sends dataframe to t-test: analyses Cholesterol by Group with equal variances & stores results in object called `t_test_chol`
+2. Asterisk shows if the differences between groups are staistically significant: * = significant; ** = highly significant; *** = very highly significant
+
+::: {.callout-note collapse="true" title="Click to see the result of the T-test" icon="false"}
+```{r}
+#| label: t-test_ind1
+#| echo: false
+#| eval: true
+t_test_chol <- chol_2_ind_sample |>
+  t_test(Cholesterol ~ Group, paired = FALSE, var.equal = TRUE) |>
+  add_significance()
+t_test_chol |>
+  kable(align = 'l')
+```
+:::
+
+<br> `5b.` **Effect size**
+
+```{r}
+#| label: effsize_ind
+#| echo: TRUE
+#| eval: false
+chol_2_ind_sample |>
+  cohens_d(Cholesterol ~ Group, paired = FALSE, var.equal = TRUE, hedges.correction=FALSE)  #<1>
+```
+1. If you want Hedge's g effect size, simply change to `hedges.correction=TRUE`
+
+::: {.callout-note collapse="true" title="Click to see Cohen's d effect size" icon="false"}
+```{r}
+#| label: effsize_ind1
+#| echo: false
+#| eval: true
+chol_2_ind_sample |>
+  cohens_d(Cholesterol ~ Group, paired = FALSE, var.equal = TRUE, hedges.correction=FALSE) |>
+  kable(align = 'l')
+```
+The output interprets the effect size of 1.05 as 'large'
+:::
+
+<br> `5c.` **Power analysis** (for data with equal numbers of replicates in each group)
+
+```{r}
+#| label: power_ind
+#| echo: TRUE
+#| eval: false
+pwr.t.test(n= 20, d = 1.05 , sig.level = 0.05, type = "two.sample", power = NULL) #<1>
+```
+1. n = the number of reps in each group; d = Cohen's d<br>
+If there is an unequal number in groups, use pwr.t2n.test:<br> 
+pwr.t2n.test(n1 = NULL, n2= NULL, d = NULL, sig.level = 0.05, power = NULL)
+
+::: {.callout-note collapse="true" title="Click to see the power analysis" icon="false"}
+```{r}
+#| label: power_ind1
+#| echo: false
+#| eval: true
+pwr.t.test(n= 20, d = 1.05 , sig.level = 0.05, type = "two.sample", power = NULL)
+```
+n = the number of reps in each group; d = Cohen's d effect size<br><br>
+If there are unequal numbers in the groups, use pwr.t2n.test:<br> 
+`pwr.t2n.test(n1 = NULL, n2= NULL, d = NULL, sig.level = 0.05, power = NULL)` where n1 = the number of data in group 1 and n2 = the number of data in group 2.
+:::
+
+<br><br>
+
+###### **6. IF DATA IS NORMALLY DISTRIBUTED & VARIANCES ARE NOT EQUAL**<br> 
+
+`6a.` **Welch test**
+
+```{r}
+#| label: welch_ind
+#| echo: TRUE
+#| eval: false
+welch_test_chol <- chol_2_ind_sample |>
+  t_test(Cholesterol ~ Group, paired = FALSE, var.equal = FALSE) |> #<1>
+  add_significance()
+welch_test_chol
+```
+1. Sends dataframe to t-test where variances are not equal; stores result in object called `welch_test_chol`
+
+::: {.callout-note collapse="true" title="Click to see the result of Welch t-test" icon="false"}
+```{r}
+#| label: welch_ind1
+#| echo: false
+#| eval: true
+welch_test_chol <- chol_2_ind_sample |>
+  t_test(Cholesterol ~ Group, paired = FALSE, var.equal = FALSE) |> #<1>
+  add_significance()
+welch_test_chol |>
+  kable(align = 'l')
+```
+:::
+
+<br> `6b.` **Effect size**
+
+```{r}
+#| label: effsize_welch
+#| echo: TRUE
+#| eval: false
+chol_2_ind_sample |>
+  cohens_d(Cholesterol ~ Group, paired = FALSE, var.equal = FALSE, hedges.correction=FALSE) #<1>
+```
+1. If you want Hedge's g effect size, simply change to `hedges.correction=TRUE`
+
+::: {.callout-note collapse="true" title="Click to see Cohen's d effect size" icon="false"}
+```{r}
+#| label: effsize_welch1
+#| echo: false
+#| eval: true
+chol_2_ind_sample |>
+  cohens_d(Cholesterol ~ Group, paired = FALSE, var.equal = FALSE, hedges.correction=FALSE) |>
+  kable(align = 'l')
+```
+The output interprets the effect size of 1.05 as 'large'
+:::
+
+<br> `6c.` **Power analysis**
+
+```{r}
+#| label: power_welch
+#| echo: TRUE
+#| eval: false
+pwr.t.test(n= 20, d = 1.05 , sig.level = 0.05, type = "two.sample", power = NULL) #<1>
+```
+1. n = the number of reps in each group; d = Cohen's d<br>
+If there is an unequal number in groups, use pwr.t2n.test:<br> 
+pwr.t2n.test(n1 = NULL, n2= NULL, d = NULL, sig.level = 0.05, power = NULL)
+
+::: {.callout-note collapse="true" title="Click to see the power analysis" icon="false"}
+```{r}
+#| label: power_welch1
+#| echo: false
+#| eval: true
+pwr.t.test(n= 20, d = 1.05 , sig.level = 0.05, type = "two.sample", power = NULL)
+```
+n = the number of reps in each group; d = Cohen's d effect size<br><br>
+If there are unequal numbers in the groups, use pwr.t2n.test:<br> 
+`pwr.t2n.test(n1 = NULL, n2= NULL, d = NULL, sig.level = 0.05, power = NULL)` where n1 = the number of data in group 1 and n2 = the number of data in group 2.
+:::
+
+<br> <br>
+
+###### **7. IF THE DATA IS NOT NORMALLY DISTRIBUTED**
+
+<br> `7a.` **Wilcoxon test** (also called the Mann-Whitney test)
+
+```{r}
+#| label: wilcoxon_ind
+#| echo: TRUE
+#| eval: false
+wilcoxon <- chol_2_ind_sample |>
+  wilcox_test(Cholesterol ~ Group) |>  #<1>
+  add_significance()
+wilcoxon
+```
+1. Sends dataframe to wilcoxon test: Cholesterol grouped by Group. Stores result in an object called `wilcoxon`
+
+::: {.callout-note collapse="true" title="Click to see the result of the Wilcoxon test" icon="false"}
+```{r}
+#| label: wilcoxon_ind1
+#| echo: false
+#| eval: true
+wilcoxon <- chol_2_ind_sample |>
+  wilcox_test(Cholesterol ~ Group) |>  #<1>
+  add_significance()
+wilcoxon |>
+  kable(align = 'l')
+```
+:::
+
+
+<br> `7b.` **Effect size**
+
+```{r}
+#| label: effsize_wilcoxon_ind
+#| echo: TRUE
+#| eval: false
+chol_2_ind_sample |>
+  wilcox_effsize(Cholesterol ~ Group) #<1>
+```
+1. Sends dataframe to the wicoxon effect size function: groups Cholesterol data by Group
+
+::: {.callout-note collapse="true" title="Click to see the Wilcoxon effect size" icon="false"}
+```{r}
+#| label: effsize_wilcoxon_ind1
+#| echo: false
+#| eval: true
+chol_2_ind_sample |>
+  wilcox_effsize(Cholesterol ~ Group) #<1>
+```
+The output interprets the effect size of 0.451 as 'moderate' or 'medium'
+:::
+
+<br>
+
+### **TWO PAIRED SAMPLES**
+
+This example is one in which each person has cholesterol levels measured before and after being given a drug to reduce cholesterol. In other words, it is a paired design in which two measurements are taken from each person.
+
+`1.` **Download the Excel file *Paired sample cholesterol.xlsx* from Canvas.**
+
+::: {.callout-note collapse="true" title="Click guidance notes" icon="true"}
+-   Check that the data in the file is 'tidy'
+-   Save it to a folder that you will use as your working directory on your OneDrive - Kingston University account.
+-   In RStudio, locate the file and set the location as your working directory. <br> If you are using a University computer you can locate OneDrive by typing: `setwd("O:/")`.<br><br> Then click the 'More' cog icon and select 'Go to working directory' and find your folder - set that as your final working directory.
+:::
+
+<br>`2.` **Import the file to a dataframe called *paired_chol***
+
+```{r}
+#| label: import_pair
+#| echo: TRUE
+#| eval: true
+paired_chol <- import("Paired sample cholesterol.xlsx")  #<1>
+```
+1. Imports the data and stores is as a dataframe object called 'paired_chol'
+
+<br> View the first 6 rows:
+
+```{r}
+#| label: head_pair
+#| echo: TRUE
+#| eval: false
+paired_chol |>
+  head()
+```
+
+::: {.callout-note collapse="true" title="Click to see the first 6 rows" icon="false"}
+```{r}
+#| label: head_pair1
+#| echo: false
+#| eval: true
+paired_chol |>
+  head() |>
+  kable(align = 'l')
+```
+You can see that the before and after measurements are in two columns. This is tidy because measurements taken at different times are different variables.<br>
+*NB* The first column identifies each subject.
+:::
+<br>
+
+Find out the type of data in the two variables:
+
+```{r}
+#| label: data_pair
+#| echo: TRUE
+#| eval: false
+paired_chol |>
+ summarise_all(class)
+```
+
+::: {.callout-note collapse="true" title="Click to see the types of data in each variable" icon="false"}
+```{r}
+#| label: data_pair1
+#| echo: false
+#| eval: true
+paired_chol |>
+ summarise_all(class) |>
+  kable(align = 'l')
+```
+The data in the columns are numeric.
+:::
+
+<br> Save the dataframe in an RData file so you don't have to import the Excel file again.
+
+```{r}
+#| label: RData_pair_wide
+#| echo: TRUE
+#| eval: true
+save(paired_chol, file = 'paired_chol.RData')
+```
+
+<br>
+<br>`3.` **Explore the data** <br>`3a.` **Descriptive statistics**
+
+```{r}
+#| label: desc_pair
+#| echo: TRUE
+#| eval: false
+paired_chol |>
+  select(Before, After) |>  #<1>
+  describe()
+```
+1. Selects just the Before and After columns (not the Subject ID)
+
+::: {.callout-note collapse="true" title="Click to see the descriptive summary statistics" icon="false"}
+```{r}
+#| label: desc_pair1
+#| echo: false
+#| eval: true
+paired_chol |>
+  select(Before, After) |>
+  describe() |>
+  kable(align = 'l')
+```
+:::
+
+<br>`3b.` **Boxplot**<br>
+
+**i)** To do a boxplot, the data must be arranged in a 'long' format, with all cholesterol measurements in 1 column (called 'Cholesterol') and a 2nd column (called 'Before_After') with the 'Before' or 'After' labels.<br> <br>We then need to make the 'Before_After' column a factor (instead of numeric).
+
+```{r}
+#| label: boxplot_arrange
+#| echo: TRUE
+#| eval: false
+pair_chol_long <- paired_chol |>
+  gather(key=Before_After, value=Cholesterol, Before, After)  #<1>
+
+pair_chol_long <- pair_chol_long |>
+  mutate(Before_After = as.factor(Before_After))  #<2>
+
+pair_chol_long  #<3>
+```
+1. Make the dataframe 'long' and save as a new dataframe called `pair_chol_long` for the boxplot<br> Puts Cholesterol in 1 column and puts the Before and After values in 1 grouping column called Before_After.
+2. Makes the new grouping column ('Before_After') a factor and saves it as a dataframe with the same name ('pair_chol_long')
+3. This shows the whole dataframe.  To see only the first 6 rows, use the head() function
+
+::: {.callout-note collapse="true" title="Click to see the rearranged long dataframe" icon="false"}
+```{r}
+#| label: boxplot_arrange1
+#| echo: false
+#| eval: true
+pair_chol_long <- paired_chol |>
+  gather(key=Before_After, value=Cholesterol, Before, After)
+
+pair_chol_long <- pair_chol_long |>
+  mutate(Before_After = as.factor(Before_After))
+
+pair_chol_long |>
+  kable(align = 'l')
+```
+:::
+
+<br> **ii)** It is useful here to re-order the factors 'Before' and 'After' to make sure 'Before' appears on the left in the boxplot (and not in alphabetical order)
+
+```{r}
+#| label: boxplot relevel
+#| echo: TRUE
+#| eval: true
+pair_chol_long$Before_After <- fct_relevel(pair_chol_long$Before_After, "Before", "After")  #<1>
+```
+1. Takes the Before_After grouping column in the `pair_chol_long` dataframe (pair_chol_long$Before_After), and specifies that Before appears first and then After (reading left to right)
+
+<br> **iii)** Save this long format dataframe as an RData file so that you don't have to do all of this again:
+
+```{r}
+#| label: rdata_chol_long
+#| echo: TRUE
+#| eval: true
+save(pair_chol_long, file = 'pair_chol_long.RData')
+```
+
+<br> **iv)** The boxplot
+
+```{r}
+#| label: boxplot
+#| echo: TRUE
+#| eval: false
+pair_chol_long |>
+  ggplot(aes(x = Before_After, y = Cholesterol)) +
+  geom_boxplot(fill = "lightblue") +  #<1>
+  stat_summary(fun=mean, geom="point", shape=15, size = 4, color="black", fill="black") +  #<2>
+  labs(title = "Boxplot of Cholesterol Paired Data",
+       subtitle = "(square = mean, thick line = median)",
+       x = "Before & After Treatment",
+       y = "Cholesterol (mg/dL)")
+```
+1. Sends the pair_chol_long dataframe to ggplot() to create a boxplot with Before_After on the x-axis and Cholesterol on the y-axis
+2. Plots the mean value for the group as a black square in the boxplot
+
+::: {.callout-note collapse="true" title="Click to see the boxplot" icon="false"}
+```{r}
+#| label: boxplot1
+#| echo: false
+#| eval: true
+pair_chol_long |>
+  ggplot(aes(x = Before_After, y = Cholesterol)) +
+  geom_boxplot(fill = "lightblue") +
+  stat_summary(fun=mean, geom="point", shape=15, size = 4, color="black", fill="black") +  
+  labs(title = "Boxplot of Cholesterol Paired Data",
+       subtitle = "(square = mean, thick line = median)",
+       x = "Before & After Treatment",
+       y = "Cholesterol (mg/dL)")
+```
+:::
+
+<br><br> <br>**4. STATISTICAL ANALYSIS: ASSUMPTIONS**<br> This uses the 'wide' dataframe with Before and After data in two columns (`paired_chol`) <br>\*\* *NB Statistical analyses are carried out on the differences between the 2 paired variables*<br>We need to check whether or not the differences form a normal distribution.
+
+`4a.` **Calculate differences (Before - After) and create a new column called 'Differences' with these values:**
+
+```{r}
+#| label: diff_pair
+#| echo: TRUE
+#| eval: false
+paired_chol <- paired_chol |>
+  mutate(Differences = Before - After)  #<1>
+
+paired_chol |>
+  head() 
+```
+1. Creates a new column called 'Differences' in which the difference for each Subject between each Before and After value is placed; *ie* Differences = Before - After
+
+::: {.callout-note collapse="true" title="Click to see the 1st 6 rows of the dataframe" icon="false"}
+```{r}
+#| label: diff_pair1
+#| echo: false
+#| eval: true
+paired_chol <- paired_chol |>
+  mutate(Differences = Before - After)  
+
+paired_chol |>
+  head() |>
+  kable(align = 'l')
+```
+:::
+
+<br><br>`4b.` **Normality test: on the differences between Before and After**<br>
+
+```{r}
+#| label: shapiro_pair
+#| echo: true
+#| eval: false
+paired_chol |>
+  shapiro_test(Differences)  #<1>
+```
+1. Does the Shapiro-Wilk test on the Differences column only
+
+::: {.callout-note collapse="true" title="Click to see the result of the Shapiro-Wilk test" icon="false"}
+```{r}
+#| label: shapiro_pair1
+#| echo: false
+#| eval: true
+paired_chol |>
+  shapiro_test(Differences) |>
+  kable(align = 'l')
+```
+Here, P>0.05, so the data is normally distributed.
+:::
+
+ <br><br>
+
+###### **5. IF THE DIFFERENCES ARE NORMALLY DISTRIBUTED:**
+
+These calculations use the 'long' data (`pair_chol_long`), but tell R that the data is paired, so the calculation is performed on the differences between the 2 groups. <br><br> `5a.` **The paired t-test**
+
+```{r}
+#| label: paired_t-test
+#| echo: TRUE
+#| eval: false
+pair_chol_long |> 
+  t_test(Cholesterol ~ Before_After, paired = TRUE) |>  #<1>
+  add_significance()
+```
+1. Does the t-test on the Cholesterol data grouped by the Before_After variable, and says that it is a paired test
+
+::: {.callout-note collapse="true" title="Click to see the result of the paired t-test" icon="false"}
+```{r}
+#| label: paired_t-test1
+#| echo: false
+#| eval: true
+pair_chol_long |> 
+  t_test(Cholesterol ~ Before_After, paired = TRUE) |>
+  add_significance() |>
+  kable(align = 'l')
+```
+:::
+
+<br> <br>`5b.` **Effect size**<br>
+Cohen's d effect size
+
+```{r}
+#| label: effsize_pair
+#| echo: TRUE
+#| eval: false
+pair_chol_long |>
+  cohens_d(Cholesterol ~ Before_After, paired = TRUE, hedges.correction=FALSE)  #<1>
+```
+1. *NB* hedges.correction=FALSE provides Cohen's d. TRUE provides Hedge's g
+
+::: {.callout-note collapse="true" title="Click to see the Cohen's d effect size" icon="false"}
+```{r}
+#| label: effsize_pair1
+#| echo: false
+#| eval: true
+pair_chol_long |>
+  cohens_d(Cholesterol ~ Before_After, paired = TRUE, hedges.correction=FALSE) |>
+  kable(align = 'l')
+```
+Cohen's d  = 2.016 which is a large effect
+:::
+
+<br><br>`5c.` **Power analysis**
+
+```{r}
+#| label: power_pair
+#| echo: TRUE
+#| eval: false
+pwr.t.test(n= 20, d = 2.16 , sig.level = 0.05, type = "paired", power = NULL) #<1>
+```
+1. n = number of subjects, d = Cohen's d, leave power = NULL as this is the value to be calculated.
+
+::: {.callout-note collapse="true" title="Click to see the Cohen's d effect size" icon="false"}
+```{r}
+#| label: power_pair1
+#| echo: false
+#| eval: true
+pwr.t.test(n= 20, d = 2.16 , sig.level = 0.05, type = "paired", power = NULL) #<1>
+```
+In this example, there is 100% chance of detecting an effect (power = 100%)
+:::
+
+<br><br>
+
+###### **6. IF THE DATA IS NOT NORMALLY DISTRIBUTED**
+
+These calculations use the 'long' data, but tell R that the data is paired, so the calculation is performed on the differences between the 2 groups.<br><br>
+'6a.' **Wilcoxon signed rank test**
+
+```{r}
+#| label: wilcox_pair
+#| echo: TRUE
+#| eval: false
+pair_chol_long |>
+  wilcox_test(Cholesterol ~ Before_After, paired = TRUE) |> #<1>
+  add_significance()
+```
+1. Does the test on the Cholesterol data grouped by the Before_After variable, and says that it is a paired test
+
+::: {.callout-note collapse="true" title="Click to see the result of the Wilcoxon test" icon="false"}
+```{r}
+#| label: wilcox_pair1
+#| echo: false
+#| eval: true
+pair_chol_long |>
+  wilcox_test(Cholesterol ~ Before_After, paired = TRUE) |> 
+  add_significance() |>
+  kable(align = 'l')
+```
+P = 1.9 x 10^-6^; Highly statistically significant
+:::
+
+<br><br>`6b.` **Effect size**
+
+```{r}
+#| label: effsize_pair2
+#| echo: TRUE
+#| eval: false
+pair_chol_long |>
+  wilcox_effsize(Cholesterol ~ Before_After, paired = TRUE)  #<1>
+```
+1. Does the test on the Cholesterol data grouped by the Before_After variable, and says that it is a paired test
+
+::: {.callout-note collapse="true" title="Click to see the result of the Wilcoxon test" icon="false"}
+```{r}
+#| label: effsize_pair2a
+#| echo: false
+#| eval: true
+pair_chol_long |>
+  wilcox_effsize(Cholesterol ~ Before_After, paired = TRUE) |>
+  kable(align = 'l')
+```
+The Wilcoxon effect size = 0.88; a large effect.
+:::
+
+::::::::::::::::::::::
