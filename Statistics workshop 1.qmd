@@ -31,12 +31,13 @@ library(tidyverse)
 library(rio)
 library(psych)
 library(pastecs)
-library(FSA)
 library(effsize)
 library(rstatix)
 library(pwr)
 ```
-*NB* If you get a message saying that a packages does not exist, you need to install it first with `install.packages("name_of_package")`
+
+*NB* If you get a message saying that a packages does not exist, you need to install it first with `install.packages("name_of_package")`<br>
+If you get an error message saying that the `coin` package needs to be installed, install it with `install.packages("coin")`
 :::
 
 <br>**SELECT THE RELEVANT TAB BELOW FOR YOUR DATA**
@@ -66,7 +67,6 @@ This example is to analyse whether or not the mean value of cholesterol measured
 chol_1Sample <- import('1-sample cholesterol.xlsx') #<1>
 head(chol_1Sample) #<2>
 ```
-
 1.  Imports the excel file to a dataframe object callsed 'chol_1Sample'
 2.  Shows the first 6 rows of the dataframe
 
@@ -149,15 +149,16 @@ chol_1Sample |>
 ```
 :::
 
-<br><br>`3.2` Descriptive statistics plus Shapiro Wilk test for normality:
+<br><br>`3.2` Descriptive statistics:
 
 ```{r}
 #| label: descriptive
 #| echo: TRUE
 #| eval: false
 chol_1Sample |>
-  stat.desc(norm = TRUE) 
+  describe(quant = c(.25, .75))  #<1>
 ```
+1. Provides summary descriptive statistics.  The `quant` line calculates the 1st and 3rd quartiles (*ie* the 25th and 75th percentiles)
 
 ::: {.callout-note collapse="true" title="Click to see the summary statistics" icon="false"}
 ```{r}
@@ -165,10 +166,30 @@ chol_1Sample |>
 #| echo: false
 #| eval: true
 chol_1Sample |>
-  stat.desc(norm = TRUE) 
+  describe(quant = c(.25, .75)) 
+```
+:::
+<br>
+`3.3` The Shapiro-Wilk test for the normal distribution of data
+
+```{r}
+#| label: normal.1t
+#| echo: TRUE
+#| eval: false
+chol_1Sample |>
+  shapiro_test(LDL) 
 ```
 
-The *normtest.p* is the P-value for the Shapiro-Wilk test for a normal distribution. In this case, P\<0.05 so the data is NOT normally distributed.
+::: {.callout-note collapse="true" title="Click to see the result of the Shapiro-Wilk test" icon="false"}
+```{r}
+#| label: normal.1t1
+#| echo: false
+#| eval: true
+chol_1Sample |>
+  shapiro_test(LDL) |>
+kable(align = 'l')
+```
+In this case, P<0.05 so the data is NOT normally distributed.
 :::
 
 <br><br>
@@ -337,7 +358,7 @@ This example is to analyse whether or not the mean cholesterol levels in two ind
 -   Check that the data in the file is 'tidy'
 -   Upload it to RStudio Cloud, saving it to a folder for this Statistics Workshop 1 session (*NB* If you are using RStudio on your own laptop, simply save the excel file to a relevant folder on your laptop).
 
-![Uploading a file to RStudio](upload 2-sample.png){.lightbox width="70%"}
+![Uploading a file to RStudio](upload%202-sample.png){.lightbox width="70%"}
 
 -   In RStudio, locate the file and set the folder location as your working directory.
 :::
@@ -367,7 +388,7 @@ head(chol_2_ind_sample)|>
 
 **Note** that the data is 'tidy' - each column is a unique variable & each row is for 1 person
 :::
-
+<br>
 The `summarise_all(class)` function shows us what type of data is stored in the dataframe.
 
 ```{r}
@@ -387,7 +408,6 @@ chol_2_ind_sample |>
 summarise_all(class) |>
   kable(align = 'l')
 ```
-
 Both variables are numeric
 :::
 
@@ -403,7 +423,6 @@ chol_2_ind_sample <- chol_2_ind_sample |>
 chol_2_ind_sample |>
   summarise_all(class)  #<2> 
 ```
-
 1.  Sends the *chol_2_ind_sample* dataframe to the mutate() function to convert Group to become a factor. Saves this as an object with the same dataframe name (*ie*, it overwrites the dataframe)
 2.  Check the types of data in each variable
 
@@ -464,19 +483,19 @@ chol_2_ind_sample |>
 <br><br> **4. Descriptive statistics (using psych package), Shapiro Wilk test for normality & Levene's test for homogeneity of variance (from rstatix package)** <br><br> `4a.` **Descriptives**
 
 ```{r}
-#| label: descriptives
+#| label: descr
 #| echo: TRUE
 #| eval: false
-Summarize(Cholesterol ~ Group, data = chol_2_ind_sample) 
+describeBy(Cholesterol ~ Group, data = chol_2_ind_sample, quant = c(.25, .75)) #<1> 
 ```
+1. Gets summary statistics for each 'Group'. The `quant` line returns the 1st and 3rd quartiles (*ie* the 25th & 75th percentiles)
 
 ::: {.callout-note collapse="true" title="Click to see the summary statistics" icon="false"}
 ```{r}
-#| label: descriptives1
+#| label: descr1
 #| echo: false
 #| eval: true
-Summarize(Cholesterol ~ Group, data = chol_2_ind_sample) |>
-  kable(align = 'l')
+describeBy(Cholesterol ~ Group, data = chol_2_ind_sample, quant = c(.25, .75))
 ```
 :::
 
@@ -754,7 +773,7 @@ This example is one in which each person has cholesterol levels measured before 
 -   Check that the data in the file is 'tidy'
 -   Upload it to RStudio Cloud, saving it to a folder for this Statistics Workshop 1 session (*NB*if you are using RStudio on your own laptop, simply save the excel file to a relevant folder on your laptop).
 
-![Uploading a file to RStudio](upload paired.png){.lightbox width="70%"}
+![Uploading a file to RStudio](upload%20paired.png){.lightbox width="70%"}
 
 -   In RStudio, locate the file and set the folder location as your working directory.
 :::
