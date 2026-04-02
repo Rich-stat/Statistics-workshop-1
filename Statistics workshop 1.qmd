@@ -310,7 +310,7 @@ Here, P=0.322, so the data IS NOT statistically significantly different to an ex
 #| echo: TRUE
 #| eval: false
 chol_1Sample |>
-  wilcox_effsize(LDL ~ 1, mu = 120)  #<1>
+  rstatix::wilcox_effsize(LDL ~ 1, mu = 120)  #<1>
 ```
 
 1.  Effect size comparing the mean LDL against an expected value of 120
@@ -321,7 +321,7 @@ chol_1Sample |>
 #| echo: false
 #| eval: true
 chol_1Sample |>
-  wilcox_effsize(LDL ~ 1, mu = 120) |>
+  rstatix::wilcox_effsize(LDL ~ 1, mu = 120) |>
   kable(align = 'l')
 ```
 
@@ -619,6 +619,7 @@ The output interprets the effect size of 1.05 as 'large'
 #| eval: false
 pwr.t.test(n= 20, d = 1.05 , sig.level = 0.05, type = "two.sample", power = NULL) #<1>
 ```
+
 1.  n = the number of reps in each group; d = Cohen's d
 
 *NB* In this example there are 20 measurements in both groups, and we have calculated the effect size (d) as 1.05
@@ -642,6 +643,7 @@ n = the number of reps in each group; d = Cohen's d effect size<br><br>
 #| eval: false
 pwr.t2n.test(n1 = NULL, n2= NULL, d = NULL, sig.level = 0.05, power = NULL) #<1>
 ```
+
 1.  n1 = the number of data in group 1 and n2 = the number of data in group 2, d = Cohen's d effect size.
 
 <br><br>
@@ -696,11 +698,11 @@ chol_2_ind_sample |>
   cohens_d(Cholesterol ~ Group, paired = FALSE, var.equal = FALSE, hedges.correction=FALSE) |>
   kable(align = 'l')
 ```
+
 The output interprets the effect size of 1.05 as 'large'
 :::
 
-<br> `6c.` **Power analysis**<br>
-`6c.i` If there are data with equal numbers of replicates in each group:
+<br> `6c.` **Power analysis**<br> `6c.i` If there are data with equal numbers of replicates in each group:
 
 ```{r}
 #| label: power_welch
@@ -708,6 +710,7 @@ The output interprets the effect size of 1.05 as 'large'
 #| eval: false
 pwr.t.test(n= 20, d = 1.05 , sig.level = 0.05, type = "two.sample", power = NULL) #<1>
 ```
+
 1.  n = the number of reps in each group; d = Cohen's d
 
 *NB* In this example there are 20 measurements in both groups, and we have calculated the effect size (d) as 1.05
@@ -719,16 +722,19 @@ pwr.t.test(n= 20, d = 1.05 , sig.level = 0.05, type = "two.sample", power = NULL
 #| eval: true
 pwr.t.test(n= 20, d = 1.05 , sig.level = 0.05, type = "two.sample", power = NULL)
 ```
+
 n = the number of reps in each group; d = Cohen's d effect size
 :::
 
 `6c.ii` If there are data with unequal numbers in the two groups:
+
 ```{r}
 #| label: power_welch2
 #| echo: TRUE
 #| eval: false
 pwr.t2n.test(n1 = NULL, n2= NULL, d = NULL, sig.level = 0.05, power = NULL) #<1>
 ```
+
 1.  n1 = the number of data in group 1 and n2 = the number of data in group 2, d = Cohen's d effect size.
 
 <br> <br>
@@ -769,8 +775,9 @@ wilcoxon |>
 #| echo: TRUE
 #| eval: false
 chol_2_ind_sample |>
-  wilcox_effsize(Cholesterol ~ Group) #<1>
+  rstatix::wilcox_effsize(Cholesterol ~ Group) #<1>
 ```
+
 1.  Sends dataframe to the wilcoxon effect size function: groups Cholesterol data by Group
 
 ::: {.callout-note collapse="true" title="Click to see the Wilcoxon effect size" icon="false"}
@@ -779,7 +786,7 @@ chol_2_ind_sample |>
 #| echo: false
 #| eval: true
 chol_2_ind_sample |>
-  wilcox_effsize(Cholesterol ~ Group) #<1>
+  rstatix::wilcox_effsize(Cholesterol ~ Group) #<1>
 ```
 
 The output interprets the effect size of 0.451 as 'moderate' or 'medium'
@@ -1157,7 +1164,7 @@ P = 1.9 x 10^-6^; Highly statistically significant
 #| echo: TRUE
 #| eval: false
 pair_chol_long |>
-  wilcox_effsize(Cholesterol ~ Before_After, paired = TRUE)  #<1>
+  rstatix::wilcox_effsize(Cholesterol ~ Before_After, paired = TRUE)  #<1>
 ```
 
 1.  Does the test on the Cholesterol data grouped by the Before_After variable, and says that it is a paired test
@@ -1168,7 +1175,7 @@ pair_chol_long |>
 #| echo: false
 #| eval: true
 pair_chol_long |>
-  wilcox_effsize(Cholesterol ~ Before_After, paired = TRUE) |>
+  rstatix::wilcox_effsize(Cholesterol ~ Before_After, paired = TRUE) |>
   kable(align = 'l')
 ```
 
