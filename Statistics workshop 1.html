@@ -134,7 +134,7 @@ Click to see packages to install (Copy and paste to Script editor)
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <p>This example is to analyse whether or not the mean value of cholesterol measured in a sample of 20 people is statistically significantly different to an expected value of 120.</p>
-<p><br> <strong>1. Download the Excel file <code>1-sample cholesterol.xlsx</code></strong> from Canvas to your Downloads folder.</p>
+<p><br> <strong>1. Download the Excel file</strong> <a href="https://kingstonuniversity-my.sharepoint.com/:x:/g/personal/ku11417_kingston_ac_uk/IQAJNKa1AQh7Sq8KeI_mpseoAds51g-XCgtXBl8mFTZxqsg?e=R6aLq6">1-sample cholesterol.xlsx</a> from Canvas to your Downloads folder.</p>
 <div class="callout callout-style-default callout-note callout-titled" title="Upload excel file to RStudio Cloud">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -621,12 +621,12 @@ Click to see the result of power analysis
 <p><br><code>5.1</code> <strong>Wilcoxon 1-sample test</strong>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="annotated-cell-11"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-11-1"><a href="#annotated-cell-11-1" aria-hidden="true" tabindex="-1"></a>chol_1Sample <span class="sc">|&gt;</span></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="1">1</button><span id="annotated-cell-11-2" class="code-annotation-target"><a href="#annotated-cell-11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wilcox_test</span>(LDL <span class="sc">~</span> <span class="dv">1</span>, <span class="at">mu =</span> <span class="dv">120</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="1">1</button><span id="annotated-cell-11-2" class="code-annotation-target"><a href="#annotated-cell-11-2" aria-hidden="true" tabindex="-1"></a>  rstatix<span class="sc">::</span><span class="fu">wilcox_test</span>(LDL <span class="sc">~</span> <span class="dv">1</span>, <span class="at">mu =</span> <span class="dv">120</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-annotation">
 <dl class="code-annotation-container-hidden code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-11" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-11" data-code-lines="2" data-code-annotation="1">Wilcoxon test for 1 variable, comparing the mean LDL against an expected value of 120</span>
+<span data-code-cell="annotated-cell-11" data-code-lines="2" data-code-annotation="1">Wilcoxon test for 1 variable, comparing the mean LDL against an expected value of 120. (<code>rstatix::</code> specifies to use the rstatix package)</span>
 </dd>
 </dl>
 </div>
@@ -676,7 +676,7 @@ Click to see the result of Wilcoxon test
 <p><br><code>5.2</code> <strong>Effect size (Wilcoxon effect size)</strong>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="annotated-cell-12"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-12-1"><a href="#annotated-cell-12-1" aria-hidden="true" tabindex="-1"></a>chol_1Sample <span class="sc">|&gt;</span></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-12" data-target-annotation="1">1</button><span id="annotated-cell-12-2" class="code-annotation-target"><a href="#annotated-cell-12-2" aria-hidden="true" tabindex="-1"></a>  rstatix<span class="sc">::</span><span class="fu">wilcox_effsize</span>(LDL <span class="sc">~</span> <span class="dv">1</span>, <span class="at">mu =</span> <span class="dv">120</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-12" data-target-annotation="1">1</button><span id="annotated-cell-12-2" class="code-annotation-target"><a href="#annotated-cell-12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wilcox_effsize</span>(LDL <span class="sc">~</span> <span class="dv">1</span>, <span class="at">mu =</span> <span class="dv">120</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-annotation">
 <dl class="code-annotation-container-hidden code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-12" data-target-annotation="1">1</dt>
@@ -773,7 +773,7 @@ Click to see the result of power analysis
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <p>This example is to analyse whether or not the mean cholesterol levels in two independent groups of people are statistically significantly different. Group 1 is the experimental group given a new drug to reduce cholesterol. Group 2 is a control group given a placebo.</p>
-<p><br> <strong>1. Download the Excel file <code>2-sample cholesterol.xlsx</code></strong> from Canvas to your Downloads folder.</p>
+<p><br> <strong>1. Download the Excel file</strong> <a href="https://kingstonuniversity-my.sharepoint.com/:x:/g/personal/ku11417_kingston_ac_uk/IQDzlJTxbGx6RKTXK7uY-uiOAWXauJQagQJB2PImD7y63vg?e=xOiIep">2-sample cholesterol.xlsx</a> from Canvas to your Downloads folder.</p>
 <div class="callout callout-style-default callout-note callout-titled" title="Upload excel file to RStudio Cloud">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -1539,14 +1539,14 @@ NOTE: n is number in *each* group</code></pre>
 <p><br> <code>7a.</code> <strong>Wilcoxon test</strong> (also called the Mann-Whitney test)</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="annotated-cell-31"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-31-1"><a href="#annotated-cell-31-1" aria-hidden="true" tabindex="-1"></a>wilcoxon <span class="ot">&lt;-</span> chol_2_ind_sample <span class="sc">|&gt;</span></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-31" data-target-annotation="1">1</button><span id="annotated-cell-31-2" class="code-annotation-target"><a href="#annotated-cell-31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wilcox_test</span>(Cholesterol <span class="sc">~</span> Group) <span class="sc">|&gt;</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-31" data-target-annotation="1">1</button><span id="annotated-cell-31-2" class="code-annotation-target"><a href="#annotated-cell-31-2" aria-hidden="true" tabindex="-1"></a>  rstatix<span class="sc">::</span><span class="fu">wilcox_test</span>(Cholesterol <span class="sc">~</span> Group) <span class="sc">|&gt;</span></span>
 <span id="annotated-cell-31-3"><a href="#annotated-cell-31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_significance</span>()</span>
 <span id="annotated-cell-31-4"><a href="#annotated-cell-31-4" aria-hidden="true" tabindex="-1"></a>wilcoxon</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-annotation">
 <dl class="code-annotation-container-hidden code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-31" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-31" data-code-lines="2" data-code-annotation="1">Sends dataframe to wilcoxon test: Cholesterol grouped by Group. Stores result in an object called <code>wilcoxon</code></span>
+<span data-code-cell="annotated-cell-31" data-code-lines="2" data-code-annotation="1">Sends dataframe to wilcoxon test: Cholesterol grouped by Group. Stores result in an object called <code>wilcoxon</code>.(<code>rstatix::</code> specifies to use the rstatix package)</span>
 </dd>
 </dl>
 </div>
@@ -1599,7 +1599,7 @@ Click to see the result of the Wilcoxon test
 <p><br> <code>7b.</code> <strong>Effect size</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="annotated-cell-32"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-32-1"><a href="#annotated-cell-32-1" aria-hidden="true" tabindex="-1"></a>chol_2_ind_sample <span class="sc">|&gt;</span></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-32" data-target-annotation="1">1</button><span id="annotated-cell-32-2" class="code-annotation-target"><a href="#annotated-cell-32-2" aria-hidden="true" tabindex="-1"></a>  rstatix<span class="sc">::</span><span class="fu">wilcox_effsize</span>(Cholesterol <span class="sc">~</span> Group)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-32" data-target-annotation="1">1</button><span id="annotated-cell-32-2" class="code-annotation-target"><a href="#annotated-cell-32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wilcox_effsize</span>(Cholesterol <span class="sc">~</span> Group)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-annotation">
 <dl class="code-annotation-container-hidden code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-32" data-target-annotation="1">1</dt>
@@ -1660,7 +1660,7 @@ Click to see the Wilcoxon effect size
 </div>
 <div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
 <p>This example is one in which each person has cholesterol levels measured before and after being given a drug to reduce cholesterol. In other words, it is a paired design in which two measurements are taken from each person.</p>
-<p><code>1.</code> <strong>Download the Excel file <code>Paired sample cholesterol.xlsx</code></strong> from Canvas to your Downloads folder.</p>
+<p><code>1.</code> <strong>Download the Excel file</strong> <a href="https://kingstonuniversity-my.sharepoint.com/:x:/g/personal/ku11417_kingston_ac_uk/IQC1xQBWa3EeT4agX4lARpRbAaUFuU7XM790KE9vOEqBdfM?e=8Y0DnA">Paired sample cholesterol.xlsx</a> from Canvas to your Downloads folder.</p>
 <div class="callout callout-style-default callout-note callout-titled" title="Upload excel file to RStudio Cloud">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-30-contents" aria-controls="callout-30" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -2539,13 +2539,13 @@ NOTE: n is number of *pairs*</code></pre>
 <p>These calculations use the ‘long’ data, but tell R that the data is paired, so the calculation is performed on the differences between the 2 groups.<br><br> ‘6a.’ <strong>Wilcoxon signed rank test</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="annotated-cell-50"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-50-1"><a href="#annotated-cell-50-1" aria-hidden="true" tabindex="-1"></a>pair_chol_long <span class="sc">|&gt;</span></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-50" data-target-annotation="1">1</button><span id="annotated-cell-50-2" class="code-annotation-target"><a href="#annotated-cell-50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wilcox_test</span>(Cholesterol <span class="sc">~</span> Before_After, <span class="at">paired =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-50" data-target-annotation="1">1</button><span id="annotated-cell-50-2" class="code-annotation-target"><a href="#annotated-cell-50-2" aria-hidden="true" tabindex="-1"></a>  rstatix<span class="sc">::</span><span class="fu">wilcox_test</span>(Cholesterol <span class="sc">~</span> Before_After, <span class="at">paired =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
 <span id="annotated-cell-50-3"><a href="#annotated-cell-50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_significance</span>()</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-annotation">
 <dl class="code-annotation-container-hidden code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-50" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-50" data-code-lines="2" data-code-annotation="1">Does the test on the Cholesterol data grouped by the Before_After variable, and says that it is a paired test</span>
+<span data-code-cell="annotated-cell-50" data-code-lines="2" data-code-annotation="1">Does the test on the Cholesterol data grouped by the Before_After variable, and says that it is a paired test. (<code>rstatix::</code> specifies to use the rstatix package)</span>
 </dd>
 </dl>
 </div>
@@ -2599,7 +2599,7 @@ Click to see the result of the Wilcoxon test
 <p><br><br><code>6b.</code> <strong>Effect size</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="annotated-cell-51"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-51-1"><a href="#annotated-cell-51-1" aria-hidden="true" tabindex="-1"></a>pair_chol_long <span class="sc">|&gt;</span></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-51" data-target-annotation="1">1</button><span id="annotated-cell-51-2" class="code-annotation-target"><a href="#annotated-cell-51-2" aria-hidden="true" tabindex="-1"></a>  rstatix<span class="sc">::</span><span class="fu">wilcox_effsize</span>(Cholesterol <span class="sc">~</span> Before_After, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-51" data-target-annotation="1">1</button><span id="annotated-cell-51-2" class="code-annotation-target"><a href="#annotated-cell-51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wilcox_effsize</span>(Cholesterol <span class="sc">~</span> Before_After, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-annotation">
 <dl class="code-annotation-container-hidden code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-51" data-target-annotation="1">1</dt>

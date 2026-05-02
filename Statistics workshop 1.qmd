@@ -46,15 +46,16 @@ library(pwr)
 
 This example is to analyse whether or not the mean value of cholesterol measured in a sample of 20 people is statistically significantly different to an expected value of 120.
 
-<br> **1. Download the Excel file `1-sample cholesterol.xlsx`** from Canvas to your Downloads folder.
+<br> **1. Download the Excel file** 
+[1-sample cholesterol.xlsx](https://kingstonuniversity-my.sharepoint.com/:x:/g/personal/ku11417_kingston_ac_uk/IQAJNKa1AQh7Sq8KeI_mpseoAds51g-XCgtXBl8mFTZxqsg?e=R6aLq6) from Canvas to your Downloads folder.
 
 ::: {.callout-note collapse="true" title="Upload excel file to RStudio Cloud" icon="true"}
--   Check that the data in the file is 'tidy'
--   Upload it to RStudio Cloud, saving it to a folder for this Statistics Workshop 1 session (*NB* If you are using RStudio on your own laptop, simply save the excel file to a relevant folder on your laptop).
+- Check that the data in the file is 'tidy'
+- Upload it to RStudio Cloud, saving it to a folder for this Statistics Workshop 1 session (*NB* If you are using RStudio on your own laptop, simply save the excel file to a relevant folder on your laptop).
 
 ![Uploading a file to RStudio](upload.png){.lightbox width="70%"}
 
--   In RStudio, locate the file and set the folder location as your working directory.
+- In RStudio, locate the file and set the folder location as your working directory.
 :::
 
 <br> **2. Import the file to RStudio and store it as a dataframe called *chol_1Sample*.**<br> The `head()` function shows us the first 6 rows.<br>
@@ -285,10 +286,10 @@ Power = 0.125. So, there was only a 12.5% chance of detecting an effect if there
 #| echo: TRUE
 #| eval: false
 chol_1Sample |>
-  wilcox_test(LDL ~ 1, mu = 120)  #<1>
+  rstatix::wilcox_test(LDL ~ 1, mu = 120)  #<1>
 ```
 
-1.  Wilcoxon test for 1 variable, comparing the mean LDL against an expected value of 120
+1.  Wilcoxon test for 1 variable, comparing the mean LDL against an expected value of 120. (`rstatix::` specifies to use the rstatix package)
 
 ::: {.callout-note collapse="true" title="Click to see the result of Wilcoxon test" icon="false"}
 ```{r}
@@ -296,7 +297,7 @@ chol_1Sample |>
 #| echo: false
 #| eval: true
 chol_1Sample |>
-  wilcox_test(LDL ~ 1, mu = 120) |>
+  rstatix::wilcox_test(LDL ~ 1, mu = 120) |>
   kable(align = 'l')
 ```
 
@@ -310,7 +311,7 @@ Here, P=0.322, so the data IS NOT statistically significantly different to an ex
 #| echo: TRUE
 #| eval: false
 chol_1Sample |>
-  rstatix::wilcox_effsize(LDL ~ 1, mu = 120)  #<1>
+  wilcox_effsize(LDL ~ 1, mu = 120)  #<1>
 ```
 
 1.  Effect size comparing the mean LDL against an expected value of 120
@@ -321,7 +322,7 @@ chol_1Sample |>
 #| echo: false
 #| eval: true
 chol_1Sample |>
-  rstatix::wilcox_effsize(LDL ~ 1, mu = 120) |>
+  wilcox_effsize(LDL ~ 1, mu = 120) |>
   kable(align = 'l')
 ```
 
@@ -354,15 +355,16 @@ The power of the test is only 15.9% to detect an effect. There is a chance we co
 
 This example is to analyse whether or not the mean cholesterol levels in two independent groups of people are statistically significantly different. Group 1 is the experimental group given a new drug to reduce cholesterol. Group 2 is a control group given a placebo.
 
-<br> **1. Download the Excel file `2-sample cholesterol.xlsx`** from Canvas to your Downloads folder.
+<br> **1. Download the Excel file** 
+[2-sample cholesterol.xlsx](https://kingstonuniversity-my.sharepoint.com/:x:/g/personal/ku11417_kingston_ac_uk/IQDzlJTxbGx6RKTXK7uY-uiOAWXauJQagQJB2PImD7y63vg?e=xOiIep) from Canvas to your Downloads folder.
 
 ::: {.callout-note collapse="true" title="Upload excel file to RStudio Cloud" icon="true"}
--   Check that the data in the file is 'tidy'
--   Upload it to RStudio Cloud, saving it to a folder for this Statistics Workshop 1 session (*NB* If you are using RStudio on your own laptop, simply save the excel file to a relevant folder on your laptop).
+- Check that the data in the file is 'tidy'
+- Upload it to RStudio Cloud, saving it to a folder for this Statistics Workshop 1 session (*NB* If you are using RStudio on your own laptop, simply save the excel file to a relevant folder on your laptop).
 
 ![Uploading a file to RStudio](upload%202-sample.png){.lightbox width="70%"}
 
--   In RStudio, locate the file and set the folder location as your working directory.
+- In RStudio, locate the file and set the folder location as your working directory.
 :::
 
 <br> **2. Import the file to RStudio and store it as a dataframe called *chol_2_ind_sample*.** <br> The `head()` function shows us the first 6 rows.
@@ -748,12 +750,12 @@ pwr.t2n.test(n1 = NULL, n2= NULL, d = NULL, sig.level = 0.05, power = NULL) #<1>
 #| echo: TRUE
 #| eval: false
 wilcoxon <- chol_2_ind_sample |>
-  wilcox_test(Cholesterol ~ Group) |>  #<1>
+  rstatix::wilcox_test(Cholesterol ~ Group) |>  #<1>
   add_significance()
 wilcoxon
 ```
 
-1.  Sends dataframe to wilcoxon test: Cholesterol grouped by Group. Stores result in an object called `wilcoxon`
+1.  Sends dataframe to wilcoxon test: Cholesterol grouped by Group. Stores result in an object called `wilcoxon`.(`rstatix::` specifies to use the rstatix package)
 
 ::: {.callout-note collapse="true" title="Click to see the result of the Wilcoxon test" icon="false"}
 ```{r}
@@ -761,7 +763,7 @@ wilcoxon
 #| echo: false
 #| eval: true
 wilcoxon <- chol_2_ind_sample |>
-  wilcox_test(Cholesterol ~ Group) |>  #<1>
+  rstatix::wilcox_test(Cholesterol ~ Group) |>  #<1>
   add_significance()
 wilcoxon |>
   kable(align = 'l')
@@ -775,7 +777,7 @@ wilcoxon |>
 #| echo: TRUE
 #| eval: false
 chol_2_ind_sample |>
-  rstatix::wilcox_effsize(Cholesterol ~ Group) #<1>
+  wilcox_effsize(Cholesterol ~ Group) #<1>
 ```
 
 1.  Sends dataframe to the wilcoxon effect size function: groups Cholesterol data by Group
@@ -786,7 +788,7 @@ chol_2_ind_sample |>
 #| echo: false
 #| eval: true
 chol_2_ind_sample |>
-  rstatix::wilcox_effsize(Cholesterol ~ Group) #<1>
+  wilcox_effsize(Cholesterol ~ Group) #<1>
 ```
 
 The output interprets the effect size of 0.451 as 'moderate' or 'medium'
@@ -798,15 +800,16 @@ The output interprets the effect size of 0.451 as 'moderate' or 'medium'
 
 This example is one in which each person has cholesterol levels measured before and after being given a drug to reduce cholesterol. In other words, it is a paired design in which two measurements are taken from each person.
 
-`1.` **Download the Excel file `Paired sample cholesterol.xlsx`** from Canvas to your Downloads folder.
+`1.` **Download the Excel file** 
+[Paired sample cholesterol.xlsx](https://kingstonuniversity-my.sharepoint.com/:x:/g/personal/ku11417_kingston_ac_uk/IQC1xQBWa3EeT4agX4lARpRbAaUFuU7XM790KE9vOEqBdfM?e=8Y0DnA) from Canvas to your Downloads folder.
 
 ::: {.callout-note collapse="true" title="Upload excel file to RStudio Cloud" icon="true"}
--   Check that the data in the file is 'tidy'
--   Upload it to RStudio Cloud, saving it to a folder for this Statistics Workshop 1 session (*NB*if you are using RStudio on your own laptop, simply save the excel file to a relevant folder on your laptop).
+- Check that the data in the file is 'tidy'
+- Upload it to RStudio Cloud, saving it to a folder for this Statistics Workshop 1 session (*NB*if you are using RStudio on your own laptop, simply save the excel file to a relevant folder on your laptop).
 
 ![Uploading a file to RStudio](upload%20paired.png){.lightbox width="70%"}
 
--   In RStudio, locate the file and set the folder location as your working directory.
+- In RStudio, locate the file and set the folder location as your working directory.
 :::
 
 <br>`2.` **Import the file to a dataframe called *paired_chol***
@@ -1137,11 +1140,11 @@ These calculations use the 'long' data, but tell R that the data is paired, so t
 #| echo: TRUE
 #| eval: false
 pair_chol_long |>
-  wilcox_test(Cholesterol ~ Before_After, paired = TRUE) |> #<1>
+  rstatix::wilcox_test(Cholesterol ~ Before_After, paired = TRUE) |> #<1>
   add_significance()
 ```
 
-1.  Does the test on the Cholesterol data grouped by the Before_After variable, and says that it is a paired test
+1.  Does the test on the Cholesterol data grouped by the Before_After variable, and says that it is a paired test. (`rstatix::` specifies to use the rstatix package)
 
 ::: {.callout-note collapse="true" title="Click to see the result of the Wilcoxon test" icon="false"}
 ```{r}
@@ -1149,7 +1152,7 @@ pair_chol_long |>
 #| echo: false
 #| eval: true
 pair_chol_long |>
-  wilcox_test(Cholesterol ~ Before_After, paired = TRUE) |> 
+  rstatix::wilcox_test(Cholesterol ~ Before_After, paired = TRUE) |> 
   add_significance() |>
   kable(align = 'l')
 ```
@@ -1164,7 +1167,7 @@ P = 1.9 x 10^-6^; Highly statistically significant
 #| echo: TRUE
 #| eval: false
 pair_chol_long |>
-  rstatix::wilcox_effsize(Cholesterol ~ Before_After, paired = TRUE)  #<1>
+  wilcox_effsize(Cholesterol ~ Before_After, paired = TRUE)  #<1>
 ```
 
 1.  Does the test on the Cholesterol data grouped by the Before_After variable, and says that it is a paired test
@@ -1175,7 +1178,7 @@ pair_chol_long |>
 #| echo: false
 #| eval: true
 pair_chol_long |>
-  rstatix::wilcox_effsize(Cholesterol ~ Before_After, paired = TRUE) |>
+  wilcox_effsize(Cholesterol ~ Before_After, paired = TRUE) |>
   kable(align = 'l')
 ```
 
