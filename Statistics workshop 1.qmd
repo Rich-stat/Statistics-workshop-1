@@ -46,8 +46,7 @@ library(pwr)
 
 This example is to analyse whether or not the mean value of cholesterol measured in a sample of 20 people is statistically significantly different to an expected value of 120.
 
-<br> **1. Download the Excel file** 
-[1-sample cholesterol.xlsx](https://kingstonuniversity-my.sharepoint.com/:x:/g/personal/ku11417_kingston_ac_uk/IQAJNKa1AQh7Sq8KeI_mpseoAds51g-XCgtXBl8mFTZxqsg?e=R6aLq6) from Canvas to your Downloads folder.
+<br> **1. Download the Excel file** [1-sample cholesterol.xlsx](https://kingstonuniversity-my.sharepoint.com/:x:/g/personal/ku11417_kingston_ac_uk/IQAJNKa1AQh7Sq8KeI_mpseoAds51g-XCgtXBl8mFTZxqsg?e=R6aLq6) from Canvas to your Downloads folder.
 
 ::: {.callout-note collapse="true" title="Upload excel file to RStudio Cloud" icon="true"}
 - Check that the data in the file is 'tidy'
@@ -355,8 +354,7 @@ The power of the test is only 15.9% to detect an effect. There is a chance we co
 
 This example is to analyse whether or not the mean cholesterol levels in two independent groups of people are statistically significantly different. Group 1 is the experimental group given a new drug to reduce cholesterol. Group 2 is a control group given a placebo.
 
-<br> **1. Download the Excel file** 
-[2-sample cholesterol.xlsx](https://kingstonuniversity-my.sharepoint.com/:x:/g/personal/ku11417_kingston_ac_uk/IQDzlJTxbGx6RKTXK7uY-uiOAWXauJQagQJB2PImD7y63vg?e=xOiIep) from Canvas to your Downloads folder.
+<br> **1. Download the Excel file** [2-sample cholesterol.xlsx](https://kingstonuniversity-my.sharepoint.com/:x:/g/personal/ku11417_kingston_ac_uk/IQDzlJTxbGx6RKTXK7uY-uiOAWXauJQagQJB2PImD7y63vg?e=xOiIep) from Canvas to your Downloads folder.
 
 ::: {.callout-note collapse="true" title="Upload excel file to RStudio Cloud" icon="true"}
 - Check that the data in the file is 'tidy'
@@ -800,8 +798,7 @@ The output interprets the effect size of 0.451 as 'moderate' or 'medium'
 
 This example is one in which each person has cholesterol levels measured before and after being given a drug to reduce cholesterol. In other words, it is a paired design in which two measurements are taken from each person.
 
-`1.` **Download the Excel file** 
-[Paired sample cholesterol.xlsx](https://kingstonuniversity-my.sharepoint.com/:x:/g/personal/ku11417_kingston_ac_uk/IQC1xQBWa3EeT4agX4lARpRbAaUFuU7XM790KE9vOEqBdfM?e=8Y0DnA) from Canvas to your Downloads folder.
+`1.` **Download the Excel file** [Paired sample cholesterol.xlsx](https://kingstonuniversity-my.sharepoint.com/:x:/g/personal/ku11417_kingston_ac_uk/IQC1xQBWa3EeT4agX4lARpRbAaUFuU7XM790KE9vOEqBdfM?e=8Y0DnA) from Canvas to your Downloads folder.
 
 ::: {.callout-note collapse="true" title="Upload excel file to RStudio Cloud" icon="true"}
 - Check that the data in the file is 'tidy'
